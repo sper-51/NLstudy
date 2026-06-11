@@ -54,6 +54,11 @@ logs/
 .DS_Store
 Thumbs.db
 
+# ============ 个人学习手册/学号命名的 Word 文档 ============
+2024180014*
+*.doc
+*.docx
+
 # ============ 部署包/构建产物（不进仓库） ============
 data/deploy-package/
 data/runtime-logs/
