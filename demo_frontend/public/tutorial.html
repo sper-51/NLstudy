@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智考平台系统使用教程</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #667085;
+      --line: rgba(148, 163, 184, .28);
+      --card: rgba(255, 255, 255, .82);
+      --blue: #2563eb;
+      --indigo: #4f46e5;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #ef4444;
+      --shadow: 0 24px 80px rgba(15, 23, 42, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 8% 8%, rgba(79, 70, 229, .18), transparent 26%),
+        radial-gradient(circle at 88% 6%, rgba(14, 165, 233, .18), transparent 22%),
+        linear-gradient(135deg, #f8fbff 0%, #eef5ff 42%, #f9fbff 100%);
+    }
+
+    .shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .hero { padding: 54px 0 28px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+    .hero-card, .panel, .shot-card, .role-card {
+      border: 1px solid rgba(255, 255, 255, .88);
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+      border-radius: 30px;
+    }
+    .hero-card { padding: 42px; position: relative; overflow: hidden; }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -90px;
+      top: -90px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: conic-gradient(from 120deg, rgba(37, 99, 235, .2), rgba(16, 185, 129, .18), rgba(245, 158, 11, .16), rgba(37, 99, 235, .2));
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      color: #334155;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(148, 163, 184, .2);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+    h1 {
+      margin: 24px 0 14px;
+      font-size: clamp(36px, 5vw, 62px);
+      line-height: 1.04;
+      letter-spacing: -.05em;
+    }
+    .gradient {
+      background: linear-gradient(135deg, var(--indigo), #0ea5e9 55%, var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lead { max-width: 760px; color: var(--muted); font-size: 18px; line-height: 1.9; }
+    .quick { padding: 26px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
+    .quick h2, .panel h2 { margin: 0; font-size: 24px; letter-spacing: -.03em; }
+    .account-grid { display: grid; gap: 12px; }
+    .account {
+      padding: 15px;
+      border-radius: 18px;
+      background: rgba(248, 250, 252, .86);
+      border: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+    .badge {
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: 14px;
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .admin { background: linear-gradient(135deg, #111827, #475569); }
+    .teacher { background: linear-gradient(135deg, var(--indigo), var(--blue)); }
+    .student { background: linear-gradient(135deg, var(--green), #0ea5e9); }
+    code {
+      padding: 2px 7px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, .06);
+      color: #0f172a;
+      font-family: Consolas, "Courier New", monospace;
+    }
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(248, 251, 255, .84);
+      backdrop-filter: blur(18px);
+    }
+    .nav-inner { display: flex; gap: 10px; padding: 14px 0; overflow-x: auto; }
+    .nav a {
+      white-space: nowrap;
+      text-decoration: none;
+      color: #334155;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .nav a:hover { background: white; border-color: var(--line); color: var(--blue); }
+    section { padding: 34px 0; }
+    .panel { padding: 30px; }
+    .section-head { display: flex; justify-content: space-between; gap: 18px; align-items: end; margin-bottom: 20px; }
+    .section-head p { color: var(--muted); line-height: 1.8; margin: 8px 0 0; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .step, .desc-card {
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.64);
+      border: 1px solid var(--line);
+    }
+    .step-num {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      color: white;
+      background: linear-gradient(135deg, var(--indigo), var(--blue));
+      font-weight: 900;
+    }
+    h3 { margin: 16px 0 9px; font-size: 19px; }
+    p, li { color: var(--muted); line-height: 1.8; }
+    ul { padding-left: 20px; margin: 10px 0 0; }
+    .shot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .shot-card { overflow: hidden; }
+    .shot-card img {
+      width: 100%;
+      display: block;
+      background: #eef2ff;
+      border-bottom: 1px solid var(--line);
+    }
+    .shot-card .caption { padding: 18px 20px 20px; }
+    .caption strong { display: block; margin-bottom: 6px; color: #0f172a; }
+    .role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .role-card { padding: 24px; }
+    .flow {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .flow span {
+      padding: 11px 13px;
+      border-radius: 14px;
+      background: rgba(248, 250, 252, .9);
+      border: 1px solid var(--line);
+      color: #334155;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+    .tab-btn {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.7);
+      color: #334155;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .tab-btn.active { color: white; background: linear-gradient(135deg, var(--indigo), var(--blue)); border-color: transparent; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .desc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .architecture {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .arch-node {
+      padding: 16px;
+      border-radius: 18px;
+      background: #0f172a;
+      color: white;
+      min-height: 92px;
+    }
+    .arch-node b { display: block; margin-bottom: 8px; }
+    .arch-node small { color: rgba(255,255,255,.72); line-height: 1.6; }
+    .footer { color: #64748b; text-align: center; padding: 36px 0 54px; }
+    @media (max-width: 900px) {
+      .hero-grid, .steps, .shot-grid, .role-grid, .desc-grid, .architecture { grid-template-columns: 1fr; }
+      .hero-card { padding: 30px; }
+      .shell { width: min(100% - 24px, 1180px); }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="shell hero-grid">
+      <div class="hero-card">
+        <div class="eyebrow"><span class="dot"></span> NLstudy 智考平台 · 完整使用教程</div>
+        <h1>从登录到教学闭环，<span class="gradient">一页看懂三端怎么用。</span></h1>
+        <p class="lead">本教程面向系统演示、答辩和联调验收，覆盖管理端、教师端、学生端、AI 能力、成绩报告、错题辅导与运维监控。截图来自当前系统真实页面。</p>
+      </div>
+      <aside class="quick hero-card">
+        <h2>演示账号</h2>
+        <div class="account-grid">
+          <div class="account"><div class="badge admin">管理端</div><div>账号 <code>admin</code><br />密码 <code>123456</code></div></div>
+          <div class="account"><div class="badge teacher">教师端</div><div>账号 <code>wanglaoshi</code><br />密码 <code>123456</code></div></div>
+          <div class="account"><div class="badge student">学生端</div><div>账号 <code>stu_001</code><br />密码 <code>123456</code></div></div>
+        </div>
+        <p>建议演示顺序：管理端确认基础数据 → 教师端配置课程/题库/试卷 → 学生端学习、查看成绩与错题 AI 辅导。</p>
+      </aside>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <div class="shell nav-inner">
+      <a href="#login">登录入口</a>
+      <a href="#admin">管理端</a>
+      <a href="#teacher">教师端</a>
+      <a href="#student">学生端</a>
+      <a href="#ai">AI 能力</a>
+      <a href="#tabs">系统描述 / 代码描述</a>
+      <a href="#acceptance">联调验收</a>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <section id="login">
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>一、登录与角色入口</h2>
+            <p>访问 <code>/login</code> 后输入账号密码，系统会根据角色自动进入管理端、教师端或学生端。</p>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step"><span class="step-num">1</span><h3>输入账号</h3><p>使用上方演示账号，账号框支持记住账号，密码默认为 <code>123456</code>。</p></div>
+          <div class="step"><span class="step-num">2</span><h3>自动分流</h3><p>管理员进入 <code>/admin</code>，教师进入 <code>/teacher/dashboard</code>，学生进入 <code>/home</code>。</p></div>
+          <div class="step"><span class="step-num">3</span><h3>查看教程</h3><p>登录页新增“查看系统使用教程”按钮，可随时打开本页辅助演示。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="admin">
+      <div class="section-head">
+        <div><h2>二、管理端使用流程</h2><p>管理端负责全局配置、用户班级、数据运维、日志审计与资源监控。</p></div>
+      </div>
+      <div class="role-grid">
+        <div class="role-card"><div class="badge admin">管理闭环</div><div class="flow"><span>全局控制台看平台概况</span><span>维护教师/学生账号</span><span>配置班级与学期</span><span>查看日志和系统资源</span></div></div>
+        <div class="role-card"><h3>推荐演示路线</h3><ul><li>进入全局控制台确认平台数据。</li><li>进入教师账号、学生账号页面检查账号可用。</li><li>进入班级与学期页面查看基础教学组织。</li><li>进入数据备份运维与系统资源监控查看运维状态。</li></ul></div>
+        <div class="role-card"><h3>当前状态说明</h3><ul><li>未接入备份执行的功能会显示“待接入”。</li><li>日志与监控无真实数据时显示空状态，不再用随机 mock。</li><li>管理端 CRUD 已通过联调脚本验证。</li></ul></div>
+      </div>
+      <div class="shot-grid" style="margin-top:18px">
+        <div class="shot-card"><img src="/tutorial-assets/admin-dashboard.png" alt="管理端全局控制台" /><div class="caption"><strong>全局控制台</strong><p>查看在线人数、考试场次、注册师生数、系统资源告警和考试趋势。</p></div></div>
+        <div class="shot-card"><img src="/tutorial-assets/admin-users.png" alt="管理端教师账号" /><div class="caption"><strong>用户账号管理</strong><p>支持教师/学生账号列表、搜索、创建、编辑、启禁用和密码重置。</p></div></div>
+        <div class="shot-card"><img src="/tutorial-assets/admin-classes.png" alt="管理端班级管理" /><div class="caption"><strong>班级管理中心</strong><p>维护班级名称、年级、学生分配与班级描述。</p></div></div>
+        <div class="shot-card"><img src="/tutorial-assets/admin-monitor.png" alt="管理端系统资源监控" /><div class="caption"><strong>系统资源监控</strong><p>展示 CPU、JVM 内存、磁盘、线程、GC 等运行时状态。</p></div></div>
+      </div>
+    </section>
+
+    <section id="teacher">
+      <div class="section-head">
+        <div><h2>三、教师端使用流程</h2><p>教师端围绕课程、题库、试卷、考试安排、阅卷和成绩分析形成教学闭环。</p></div>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span><h3>课程教学</h3><p>进入课程列表，查看课程码、学生人数、考试数量，并进入课程管理。</p></div>
+        <div class="step"><span class="step-num">2</span><h3>资源题库</h3><p>在题目管理中维护题目，支持题型、难度、课程筛选和新增题目。</p></div>
+        <div class="step"><span class="step-num">3</span><h3>试卷与考试</h3><p>通过组卷中心手动选题、智能组卷或 AI 出题，再发布为考试。</p></div>
+      </div>
+      <div class="shot-grid" style="margin-top:18px">
+        <div class="shot-card"><img src="/tutorial-assets/teacher-dashboard.png" alt="教师工作台" /><div class="caption"><strong>教师工作台</strong><p>查看当前教师课程、题库总量、待批改数量和进行中考试。</p></div></div>
+        <div class="shot-card"><img src="/tutorial-assets/teacher-courses.png" alt="教师课程列表" /><div class="caption"><strong>课程列表</strong><p>管理教师名下课程，进入课程后可查看学生、考试与课程资源。</p></div></div>
+        <div class="shot-card"><img src="/tutorial-assets/teacher-questions.png" alt="题目管理" /><div class="caption"><strong>题目管理</strong><p>维护题库题目，作为手动选题、智能组卷和 AI 出题落库的基础。</p></div></div>
+        <div class="shot-card"><img src="/tutorial-assets/teacher-builder.png" alt="组卷中心" /><div class="caption"><strong>组卷中心</strong><p>包含手动选题、智能组卷和 AI 出题三种模式，AI 内容需教师确认后生效。</p></div></div>
+      </div>
+    </section>
+
+    <section id="student">
+      <div class="section-head">
+        <div><h2>四、学生端使用流程</h2><p>学生端负责课程学习、考试结果查看、错题复盘和 AI 辅导。</p></div>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span><h3>学习中心</h3><p>查看已加入课程、待考与已完成考试，通过课程码加入新课程。</p></div>
+        <div class="step"><span class="step-num">2</span><h3>成绩报告</h3><p>选择课程和考试后查看得分、排名、正确率、知识点掌握和逐题回顾。</p></div>
+        <div class="step"><span class="step-num">3</span><h3>错题复盘</h3><p>错题本支持筛选、重练、收藏，以及右侧 AI 错题辅导面板。</p></div>
+      </div>
+      <div class="shot-grid" style="margin-top:18px">
+        <div class="shot-card"><img src="/tutorial-assets/student-home.png" alt="学生学习中心" /><div class="caption"><strong>学习中心</strong><p>汇总课程、考试、错题和通知，是学生登录后的默认入口。</p></div></div>
+        <div class="shot-card"><img src="/tutorial-assets/student-courses.png" alt="学生课程列表" /><div class="caption"><strong>我的课程</strong><p>展示学生加入的课程及教师、课程码和学习进度。</p></div></div>
+        <div class="shot-card"><img src="/tutorial-assets/student-report.png" alt="学生成绩报告" /><div class="caption"><strong>成绩报告</strong><p>展示真实成绩统计、逐题得分、正确答案和复核入口。</p></div></div>
+        <div class="shot-card"><img src="/tutorial-assets/student-wrong.png" alt="学生错题 AI 辅导" /><div class="caption"><strong>错题本 + AI 辅导</strong><p>左侧选择错题，右侧展示题干、选项、学生答案、正确答案、解析和 AI 问答。</p></div></div>
+      </div>
+    </section>
+
+    <section id="ai">
+      <div class="panel">
+        <h2>五、AI 能力使用说明</h2>
+        <div class="desc-grid" style="margin-top:18px">
+          <div class="desc-card">
+            <h3>教师端：AI 出题草稿</h3>
+            <ul>
+              <li>位置：教师端 → 试卷管理 → 组卷中心 → AI出题。</li>
+              <li>教师输入课程、章节、题型、难度、数量和要求。</li>
+              <li>AI 只生成题目草稿，不自动入库、不自动发布。</li>
+              <li>教师编辑确认后，可保存到题库或加入当前试卷。</li>
+            </ul>
+          </div>
+          <div class="desc-card">
+            <h3>学生端：AI 错题辅导</h3>
+            <ul>
+              <li>位置：学生端 → 错题本右侧 AI 面板。</li>
+              <li>可选择最多 3 道错题加入对话上下文。</li>
+              <li>支持“错因是什么”“分步讲解”“只给提示”“类似题”等快捷追问。</li>
+              <li>回答支持 Markdown、公式、表格，并保留会话管理能力。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tabs">
+      <div class="panel">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="system">系统描述</button>
+          <button class="tab-btn" data-tab="code">代码描述</button>
+        </div>
+        <div id="tab-system" class="tab-panel active">
+          <h2>系统描述</h2>
+          <p>智考平台是一个面向课程教学与在线考试闭环的三端系统，核心目标是把教学组织、题库建设、试卷生成、考试发布、学生作答、阅卷评分、成绩分析和错题辅导统一到同一套流程中。</p>
+          <div class="architecture">
+            <div class="arch-node"><b>管理端</b><small>用户、班级、学期、日志、备份运维、系统资源监控。</small></div>
+            <div class="arch-node"><b>教师端</b><small>课程、题库、试卷、考试安排、监考、阅卷、成绩分析。</small></div>
+            <div class="arch-node"><b>学生端</b><small>课程学习、考试作答、成绩报告、错题本、AI 辅导。</small></div>
+            <div class="arch-node"><b>AI 服务</b><small>Spring Boot 代理 Python Agent，提供 AI 出题和错题问答。</small></div>
+          </div>
+          <ul>
+            <li>低风险 AI 模式：AI 内容必须由教师或学生确认使用，不自动替代业务决策。</li>
+            <li>真实数据展示：缺失数据使用空状态或待接入提示，不展示随机 mock。</li>
+            <li>权限边界：不同角色只能进入对应端，后端负责鉴权与业务归属校验。</li>
+          </ul>
+        </div>
+        <div id="tab-code" class="tab-panel">
+          <h2>代码描述</h2>
+          <p>项目采用前后端分离架构：Vue 3 + Vite + Element Plus 前端，Spring Boot 后端，MySQL 数据库，独立 Python Flask Agent 作为 AI 能力内核。</p>
+          <div class="architecture">
+            <div class="arch-node"><b>前端</b><small><code>demo_frontend</code><br />Vue Router、Pinia、Axios、ECharts、Element Plus。</small></div>
+            <div class="arch-node"><b>后端</b><small><code>nlstudy</code><br />Controller、Service、Mapper 分层，统一返回 Result。</small></div>
+            <div class="arch-node"><b>数据库</b><small>MySQL <code>3307</code><br />用户、课程、题库、试卷、考试、成绩、错题等表。</small></div>
+            <div class="arch-node"><b>Agent</b><small><code>D:\123\learn_agent</code><br />LLM 调用、文件解析、会话消息、流式输出。</small></div>
+          </div>
+          <ul>
+            <li>前端路由：<code>src/router/index.ts</code> 按角色划分管理端、教师端、学生端和考试全屏页。</li>
+            <li>登录页：<code>src/views/auth/Login.vue</code> 负责统一登录与教程入口。</li>
+            <li>教程页：<code>public/tutorial.html</code> 为静态页面，构建后可通过 <code>/tutorial.html</code> 访问。</li>
+            <li>测试脚本：<code>data/test-scripts</code> 中包含数据质量、三端冒烟、管理 CRUD 和闭环展示脚本。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="acceptance">
+      <div class="panel">
+        <h2>六、联调验收状态</h2>
+        <div class="desc-grid" style="margin-top:18px">
+          <div class="desc-card">
+            <h3>已通过检查</h3>
+            <ul>
+              <li>三端指定账号页面不白屏。</li>
+              <li>页面无可见乱码、无 <code>????</code>、无英文 <code>No Data</code>。</li>
+              <li>管理端、教师端、学生端关键页面无 API 4xx/5xx。</li>
+              <li>前端构建和后端编译均通过。</li>
+            </ul>
+          </div>
+          <div class="desc-card">
+            <h3>推荐复验命令</h3>
+            <ul>
+              <li><code>node data/test-scripts/data-quality-audit.js</code></li>
+              <li><code>node data/test-scripts/three-end-smoke-audit.js</code></li>
+              <li><code>node data/test-scripts/three-end-flow-audit.js</code></li>
+              <li><code>cd demo_frontend; npm run build</code></li>
+              <li><code>cd nlstudy; mvn -q -DskipTests compile</code></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2026 智考平台 · 系统使用教程 · 当前截图来自联调验收环境</footer>
+
+  <script>
+    document.querySelectorAll('.tab-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach((item) => item.classList.remove('active'))
+        document.querySelectorAll('.tab-panel').forEach((item) => item.classList.remove('active'))
+        button.classList.add('active')
+        document.getElementById(`tab-${button.dataset.tab}`).classList.add('active')
+      })
+    })
+  </script>
+</body>
+</html>

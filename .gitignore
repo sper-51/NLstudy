@@ -1,0 +1,79 @@
+# ============ Java / Maven ============
+HELP.md
+target/
+build/
+out/
+*.class
+*.jar
+*.war
+*.ear
+.m2repo/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ============ IDE ============
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.classpath
+.factorypath
+.project
+.settings/
+.apt_generated
+.springBeans
+.sts4-cache
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# ============ Node / Frontend ============
+node_modules/
+dist/
+.nuxt/
+.cache/
+.parcel-cache/
+*.local
+
+# ============ Logs ============
+*.log
+logs/
+*.out
+*.err
+
+# ============ Office 临时文件 ============
+~$*
+.~*
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# ============ 部署包/构建产物（不进仓库） ============
+data/deploy-package/
+data/runtime-logs/
+*.zip
+*.tar.gz
+
+# ============ 测试输出/截图（按需放开） ============
+admin-crud-output/
+admin-smoke-output/
+three-end-smoke-output/
+screenshots/
+
+# ============ 本地 Python 脚本缓存 ============
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ============ 本地敏感配置 ============
+.env
+.env.local
+.env.*.local
+application-local.yml

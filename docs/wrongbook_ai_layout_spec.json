@@ -1,0 +1,43 @@
+﻿{
+  "title": "NLstudy 学生端错题 + AI问答布局草图",
+  "lanes": [
+    {"id": "nav", "label": "全局导航"},
+    {"id": "wrong", "label": "左栏：错题区"},
+    {"id": "agent", "label": "右栏：AI区"}
+  ],
+  "stages": [
+    {"id": "header", "label": "顶部信息"},
+    {"id": "filter", "label": "筛选与上下文"},
+    {"id": "main", "label": "主学习区"},
+    {"id": "action", "label": "底部动作区"}
+  ],
+  "nodes": [
+    {"id": "logo", "label": "学生端导航\n学习中心/课程/错题本/报告", "lane": "nav", "stage": "header", "order": 1, "w": 180, "h": 96},
+    {"id": "summary", "label": "错题本页头\n总错题 / 课程数 / 考试数", "lane": "wrong", "stage": "header", "order": 1, "w": 250, "h": 72},
+    {"id": "agenthead", "label": "AI辅导头部\n围绕当前错题讲解", "lane": "agent", "stage": "header", "order": 1, "w": 210, "h": 72},
+
+    {"id": "filters", "label": "筛选\n来源/课程/知识点", "lane": "wrong", "stage": "filter", "order": 1, "w": 250, "h": 72},
+    {"id": "bindctx", "label": "自动注入上下文\n课程ID/错题ID/知识点", "lane": "agent", "stage": "filter", "order": 1, "w": 210, "h": 72},
+
+    {"id": "wronglist", "label": "错题列表\n题目摘要 + 时间", "lane": "wrong", "stage": "main", "order": 1, "w": 250, "h": 84},
+    {"id": "wrongdetail", "label": "当前题详情\n题干/我的答案/正确答案", "lane": "wrong", "stage": "main", "order": 2, "w": 250, "h": 84},
+    {"id": "quickask", "label": "快捷追问\n错因/讲解/类似题/知识点", "lane": "agent", "stage": "main", "order": 1, "w": 210, "h": 84},
+    {"id": "chatpanel", "label": "AI对话区\n围绕当前题追问", "lane": "agent", "stage": "main", "order": 2, "w": 210, "h": 84},
+
+    {"id": "retry", "label": "左栏动作\n重练/收藏/加入题库", "lane": "wrong", "stage": "action", "order": 1, "w": 250, "h": 72},
+    {"id": "compose", "label": "右栏输入区\n文本/截图/发送", "lane": "agent", "stage": "action", "order": 1, "w": 210, "h": 72}
+  ],
+  "edges": [
+    {"source": "logo", "target": "summary", "label": "进入错题本"},
+    {"source": "summary", "target": "filters", "label": "筛选"},
+    {"source": "filters", "target": "wronglist", "label": "选择错题"},
+    {"source": "wronglist", "target": "wrongdetail", "label": "查看详情"},
+    {"source": "wrongdetail", "target": "bindctx", "label": "同步上下文"},
+    {"source": "bindctx", "target": "quickask", "label": "生成建议"},
+    {"source": "quickask", "target": "chatpanel", "label": "发起问答"},
+    {"source": "chatpanel", "target": "compose", "label": "继续追问"},
+    {"source": "compose", "target": "chatpanel", "label": "流式回答"},
+    {"source": "wrongdetail", "target": "retry", "label": "复盘动作"},
+    {"source": "retry", "target": "quickask", "label": "需要讲解时联动AI", "style": "dashed"}
+  ]
+}

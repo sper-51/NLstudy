@@ -1,0 +1,54 @@
+// TailwindCSS 基础样式
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全局样式 */
+body {
+  font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+}
+
+/* NProgress 进度条自定义颜色 */
+#nprogress .bar {
+  background-color: #3b82f6 !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #3b82f6, 0 0 5px #3b82f6 !important;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Element Plus 覆盖样式 */
+.el-table th.el-table__cell {
+  background-color: #f8fafc !important;
+  font-weight: 600;
+  color: #374151;
+}
+
+.el-pagination.is-background .el-pager li:not(.is-disabled).is-active {
+  background-color: #3b82f6;
+}
+
+/* 卡片通用过渡效果 */
+.card-hover {
+  @apply transition-all duration-200 ease-in-out;
+}
+.card-hover:hover {
+  @apply shadow-md -translate-y-0.5;
+}

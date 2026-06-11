@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>错题本 + AI辅导 原型</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+  <style>
+    :root {
+      --page: #f5f7fa;
+      --card: #ffffff;
+      --line: #eef0f4;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --soft: #f8fafc;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --primary-soft: #eff6ff;
+      --danger: #ef4444;
+      --danger-soft: #fef2f2;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--page);
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+      background: var(--page);
+    }
+
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+      z-index: 2;
+    }
+
+    .brand {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 20px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+
+    .brand-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
+    }
+
+    .menu {
+      flex: 1;
+      padding: 8px 12px;
+      overflow: auto;
+    }
+
+    .menu-label {
+      margin: 4px 12px 8px;
+      font-size: 12px;
+      color: #9ca3af;
+      font-weight: 600;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 44px;
+      padding: 0 12px;
+      border-radius: 8px;
+      color: #4b5563;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .menu-item i {
+      width: 20px;
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .menu-item.active {
+      color: var(--primary-dark);
+      background: var(--primary-soft);
+    }
+
+    .user-card {
+      margin: 0 12px 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .user-meta {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-id {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top {
+      padding: 24px 24px 16px;
+      flex-shrink: 0;
+    }
+
+    .top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+      color: #111827;
+    }
+
+    .sub {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .stat {
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+      color: var(--muted);
+      min-width: 104px;
+      text-align: center;
+    }
+
+    .stat strong {
+      font-size: 18px;
+      margin-right: 4px;
+    }
+
+    .stat.danger {
+      background: var(--danger-soft);
+    }
+
+    .stat.primary {
+      background: var(--primary-soft);
+    }
+
+    .stat.warning {
+      background: #fffbeb;
+    }
+
+    .stat.danger strong {
+      color: var(--danger);
+    }
+
+    .stat.primary strong {
+      color: var(--primary-dark);
+    }
+
+    .stat.warning strong {
+      color: var(--warning);
+    }
+
+    .filters {
+      min-height: 76px;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-label {
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .segmented {
+      padding: 2px;
+      border-radius: 8px;
+      background: #f3f4f6;
+      display: flex;
+      gap: 2px;
+    }
+
+    .segment {
+      border: 0;
+      background: transparent;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 6px;
+      color: #6b7280;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .segment.active {
+      background: #fff;
+      color: var(--primary-dark);
+      box-shadow: var(--shadow);
+    }
+
+    .select {
+      width: 180px;
+      height: 40px;
+      border: 1px solid #d9dee8;
+      border-radius: 8px;
+      background: white;
+      color: #9ca3af;
+      padding: 0 12px;
+      outline: none;
+    }
+
+    .workspace {
+      min-height: 0;
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(520px, 1.35fr) minmax(360px, 0.9fr);
+      gap: 16px;
+      padding: 0 24px 24px;
+      overflow: hidden;
+    }
+
+    .column {
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .panel {
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(238, 240, 244, 0.9);
+    }
+
+    .bank-panel {
+      padding: 18px;
+      background: linear-gradient(90deg, #faf5ff 0%, #eff6ff 100%);
+      border-color: #ede9fe;
+      flex-shrink: 0;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .title-left i {
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      height: 36px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .button.primary {
+      color: white;
+      background: var(--primary);
+    }
+
+    .button.soft {
+      color: var(--primary-dark);
+      background: var(--primary-soft);
+    }
+
+    .button.danger {
+      color: white;
+      background: var(--danger);
+    }
+
+    .button.gray {
+      color: #4b5563;
+      background: #f3f4f6;
+    }
+
+    .bank-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .bank-card {
+      background: #fff;
+      border: 1px solid #f0f2f6;
+      border-radius: 10px;
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .bank-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      margin-bottom: 10px;
+    }
+
+    .bank-name {
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bank-count {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .wrong-panel {
+      padding: 18px;
+      min-height: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wrong-list {
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 4px;
+    }
+
+    .wrong-card {
+      border: 1px solid #f0f2f6;
+      border-radius: 10px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color 0.18s, background 0.18s;
+    }
+
+    .wrong-card.active {
+      border-color: #bfdbfe;
+      background: #f8fbff;
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.exam {
+      color: #d97706;
+      background: #fff7ed;
+    }
+
+    .badge.course {
+      color: var(--primary-dark);
+      background: var(--primary-soft);
+    }
+
+    .badge.repeat {
+      color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .question-title {
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 10px;
+    }
+
+    .wrong-meta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .wrong-meta .danger-text {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .wrong-meta .success-text {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .ai-panel {
+      min-height: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-color: #dbeafe;
+    }
+
+    .ai-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .ai-title {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .ai-title-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .ai-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .context-card {
+      margin: 14px 18px;
+      padding: 12px;
+      border-radius: 10px;
+      background: var(--primary-soft);
+      border: 1px solid #dbeafe;
+      flex-shrink: 0;
+    }
+
+    .context-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .context-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #1e40af;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .context-text {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #334155;
+    }
+
+    .quick-row {
+      padding: 0 18px 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .quick {
+      height: 30px;
+      border: 1px solid #dbeafe;
+      background: #fff;
+      color: var(--primary-dark);
+      border-radius: 8px;
+      padding: 0 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .chat {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 0 18px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .msg {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .msg.user {
+      justify-content: flex-end;
+    }
+
+    .msg-bubble {
+      max-width: 86%;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .msg.assistant .msg-bubble {
+      color: #334155;
+      background: #f8fafc;
+      border: 1px solid #eef2f7;
+    }
+
+    .msg.user .msg-bubble {
+      color: #fff;
+      background: var(--primary);
+    }
+
+    .assistant-name {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .composer {
+      border-top: 1px solid var(--line);
+      padding: 12px 14px 14px;
+      flex-shrink: 0;
+    }
+
+    .composer-box {
+      border: 1px solid #d9dee8;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      resize: none;
+      min-height: 58px;
+      color: #111827;
+      background: transparent;
+      line-height: 1.6;
+    }
+
+    .composer-actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 8px;
+      background: #f3f4f6;
+      color: #64748b;
+      display: inline-grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 17px;
+    }
+
+    .tool-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .send {
+      height: 32px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1180px) {
+      .workspace {
+        grid-template-columns: 1fr;
+        overflow: auto;
+      }
+
+      .main {
+        overflow: auto;
+      }
+
+      .column,
+      .ai-panel,
+      .wrong-panel {
+        overflow: visible;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .app {
+        display: block;
+        height: auto;
+        overflow: auto;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+      }
+
+      .menu,
+      .user-card {
+        display: none;
+      }
+
+      .main {
+        height: auto;
+        overflow: visible;
+      }
+
+      .top {
+        padding: 18px 14px 12px;
+      }
+
+      .workspace {
+        padding: 0 14px 18px;
+      }
+
+      .top-row {
+        display: block;
+      }
+
+      .stats {
+        justify-content: flex-start;
+        margin-top: 14px;
+      }
+
+      .bank-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wrong-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon"><i class="ri-graduation-cap-fill"></i></div>
+        <div class="brand-text">智考平台</div>
+      </div>
+      <nav class="menu">
+        <div class="menu-label">主菜单</div>
+        <div class="menu-item"><i class="ri-dashboard-line"></i><span>学习中心</span></div>
+        <div class="menu-item"><i class="ri-book-3-line"></i><span>我的课程</span></div>
+        <div class="menu-item active"><i class="ri-book-open-line"></i><span>错题本</span></div>
+        <div class="menu-item"><i class="ri-bar-chart-2-line"></i><span>成绩报告</span></div>
+      </nav>
+      <div class="user-card">
+        <div class="avatar"><i class="ri-user-line"></i></div>
+        <div class="user-meta">
+          <div class="user-name">张明</div>
+          <div class="user-id">stu_001</div>
+        </div>
+        <i class="ri-logout-box-r-line" style="color:#9ca3af"></i>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="top">
+        <div class="top-row">
+          <div>
+            <h1>错题本</h1>
+            <div class="sub">共 12 道错题，AI 已根据当前题目准备辅导上下文</div>
+          </div>
+          <div class="stats">
+            <div class="stat danger"><strong>3</strong>高频错题</div>
+            <div class="stat primary"><strong>4</strong>涉及课程</div>
+            <div class="stat warning"><strong>2</strong>涉及考试</div>
+          </div>
+        </div>
+
+        <div class="filters">
+          <div class="filter-group">
+            <span class="filter-label">来源类型：</span>
+            <div class="segmented">
+              <button class="segment active">全部</button>
+              <button class="segment">考试错题</button>
+              <button class="segment">自建题库</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <span class="filter-label">课程：</span>
+            <select class="select">
+              <option>Java程序设计</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <span class="filter-label">知识点：</span>
+            <select class="select">
+              <option>集合框架</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="column">
+          <section class="panel bank-panel">
+            <div class="panel-title">
+              <div class="title-left">
+                <i class="ri-folder-add-line"></i>
+                <span>我的自建题库</span>
+              </div>
+              <button class="button primary"><i class="ri-add-line"></i>新建题库</button>
+            </div>
+            <div class="bank-grid">
+              <div class="bank-card">
+                <div class="bank-icon"><i class="ri-bookmark-fill"></i></div>
+                <div class="bank-name">集合与泛型专项</div>
+                <div class="bank-count">18 道题目</div>
+              </div>
+              <div class="bank-card">
+                <div class="bank-icon"><i class="ri-bookmark-fill"></i></div>
+                <div class="bank-name">异常处理复习</div>
+                <div class="bank-count">9 道题目</div>
+              </div>
+              <div class="bank-card">
+                <div class="bank-icon"><i class="ri-add-circle-line"></i></div>
+                <div class="bank-name">创建新题库</div>
+                <div class="bank-count">整理自己的薄弱点</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel wrong-panel">
+            <div class="panel-title">
+              <div class="title-left">
+                <i class="ri-error-warning-line" style="color:#ef4444"></i>
+                <span>错题列表</span>
+              </div>
+              <button class="button soft"><i class="ri-magic-line"></i>批量分析错因</button>
+            </div>
+
+            <div class="wrong-list">
+              <article class="wrong-card active">
+                <div>
+                  <div class="badges">
+                    <span class="badge exam">考试错题</span>
+                    <span class="badge repeat">错 3 次</span>
+                    <span style="font-size:12px;color:#9ca3af;">期中模拟卷</span>
+                  </div>
+                  <div class="question-title">ArrayList 与 LinkedList 在插入、删除、随机访问场景下的时间复杂度分别是什么？请说明原因。</div>
+                  <div class="wrong-meta">
+                    <span>single</span>
+                    <span>我的答案：<span class="danger-text">LinkedList 随机访问更快</span></span>
+                    <span>正确答案：<span class="success-text">ArrayList 随机访问更快</span></span>
+                    <span>上次错误：16 hours ago</span>
+                  </div>
+                </div>
+                <div class="card-actions">
+                  <button class="button danger"><i class="ri-restart-line"></i>重练</button>
+                  <button class="button gray"><i class="ri-star-line"></i>收藏</button>
+                </div>
+              </article>
+
+              <article class="wrong-card">
+                <div>
+                  <div class="badges">
+                    <span class="badge course">课程练习</span>
+                    <span style="font-size:12px;color:#9ca3af;">Java程序设计</span>
+                  </div>
+                  <div class="question-title">下面代码中 HashMap 遍历时抛出 ConcurrentModificationException 的原因是什么？</div>
+                  <div class="wrong-meta">
+                    <span>analysis</span>
+                    <span>我的答案：<span class="danger-text">语法错误</span></span>
+                    <span>知识点：迭代器 fail-fast</span>
+                    <span>上次错误：2 days ago</span>
+                  </div>
+                </div>
+                <div class="card-actions">
+                  <button class="button danger"><i class="ri-restart-line"></i>重练</button>
+                  <button class="button gray"><i class="ri-star-line"></i>收藏</button>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+
+        <aside class="column">
+          <section class="panel ai-panel">
+            <div class="ai-header">
+              <div>
+                <div class="ai-title">
+                  <span class="ai-title-icon"><i class="ri-robot-2-line"></i></span>
+                  <span>AI错题辅导</span>
+                </div>
+                <div class="ai-sub">围绕左侧当前错题进行讲解、追问和相似题练习</div>
+              </div>
+              <button class="button soft"><i class="ri-history-line"></i>会话</button>
+            </div>
+
+            <div class="context-card">
+              <div class="context-top">
+                <div class="context-title"><i class="ri-link"></i>已绑定当前错题</div>
+                <span class="badge course">集合框架</span>
+              </div>
+              <div class="context-text">
+                当前题目考查 ArrayList 与 LinkedList 的底层结构、随机访问和插入删除复杂度。你的错误集中在“链表随机访问”的理解。
+              </div>
+            </div>
+
+            <div class="quick-row">
+              <button class="quick">错因是什么</button>
+              <button class="quick">分步讲解</button>
+              <button class="quick">给我类似题</button>
+              <button class="quick">只给提示</button>
+            </div>
+
+            <div class="chat">
+              <div class="msg assistant">
+                <div class="msg-bubble">
+                  <div class="assistant-name">AI辅导</div>
+                  你这题的关键误区在于“链表有指针，所以访问更快”。实际上 LinkedList 要从头或尾沿节点一个个找，随机访问是 O(n)。ArrayList 底层数组可以直接按下标定位，所以随机访问是 O(1)。
+                </div>
+              </div>
+              <div class="msg user">
+                <div class="msg-bubble">那为什么 LinkedList 插入删除又更适合？</div>
+              </div>
+              <div class="msg assistant">
+                <div class="msg-bubble">
+                  <div class="assistant-name">AI辅导</div>
+                  如果已经定位到节点，LinkedList 改指针即可。但如果还没定位，查找节点仍然要 O(n)。所以考试里要看题目强调的是“已知位置”还是“按下标查找后操作”。
+                </div>
+              </div>
+            </div>
+
+            <div class="composer">
+              <div class="composer-box">
+                <textarea placeholder="继续追问这道错题，例如：请用生活例子解释链表随机访问"></textarea>
+                <div class="composer-actions">
+                  <div class="tool-row">
+                    <button class="icon-btn" title="上传截图"><i class="ri-attachment-2"></i></button>
+                    <button class="icon-btn" title="语音输入"><i class="ri-mic-line"></i></button>
+                  </div>
+                  <button class="send"><i class="ri-send-plane-2-line"></i>发送</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

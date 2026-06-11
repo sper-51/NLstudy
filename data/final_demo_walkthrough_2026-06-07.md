@@ -1,0 +1,71 @@
+# NLstudy 最终演示 Walkthrough（2026-06-07）
+
+- 演示地址：http://127.0.0.1:3000
+- 后端接口基座：`http://127.0.0.1:8080/api/v1`
+- 教师账号：`wanglaoshi / 123456`
+- 学生账号：`stu_001 / 123456`
+
+## 教师端 walkthrough
+- 登录后地址：http://127.0.0.1:3000/teacher/dashboard
+- 课程列表页：http://127.0.0.1:3000/teacher/courses
+- 课程列表摘要：智考平台 教师端 主菜单 工作台 课程教学 课程列表 学生选课 资源题库 试卷管理 考务中心 阅卷评分 数据分析 王老师 教师 ???? ??????????????????????????? ???? ???? 4 ???? 88 ???? 5 ???? 12 ???? ? 4 ? ddd 8FE21D07 1111 7 ??? 2 ??? 3 ?? 64 ?? ?????? Web前端开发技术 419AB2AE Web前端
+- 课程详情页：http://127.0.0.1:3000/teacher/course/15
+- 课程详情摘要：智考平台 教师端 主菜单 工作台 课程教学 课程列表 学生选课 资源题库 试卷管理 考务中心 阅卷评分 数据分析 王老师 教师 返回工作台 / 课程详情 ddd 1111 课程代码：8FE21D07 3 学分 64 学时 授课教师： 课程加入码： 8FE21D07 复制 生成/刷新 查看二维码 选课学生 考试列表 题库统计 状态筛选 共 7 名学生 学号 姓名 加入时间 状态 操作 stu_001 张明 2026-06-05T16:37:15 已通过 查看详情 移除 stu_
+- 成绩分析页：http://127.0.0.1:3000/teacher/analytics
+- 成绩分析摘要：智考平台 教师端 主菜单 工作台 课程教学 资源题库 试卷管理 考务中心 阅卷评分 数据分析 成绩总览 质量看板 王老师 教师 成绩分析 多维度数据分析，全面掌握考试情况 ddd Java程序设计-期中考试 按班级筛选 按分数段筛选 平均分 74 较上次 +0 最高分 95 - 最低分 54 - 及格率 83.3% 10/12 人及格 成绩分布 班级成绩对比 知识点掌握度 题型得分率 成绩排名 Top 10 Bottom 5 排名 学号 姓名 班级 得分 排名变化 🥇 306 张三 - 95 - 🥈 403 赵芳 - 92 - 🥉 307 李四 
+- 待阅任务页：http://127.0.0.1:3000/teacher/grading
+- 待阅任务摘要：智考平台 教师端 主菜单 工作台 课程教学 资源题库 试卷管理 考务中心 阅卷评分 待阅任务 成绩复核 批改历史 数据分析 王老师 教师 待阅任务 批改主观题与编程题，高效完成阅卷工作 未批阅 已批阅 全部 待批改总数3 今日已完成0 按考试筛选 按题型筛选 批改队列 （3 条待处理） 李 李四 Web前端开发-期末考试 简答题 第 1 题 · 简答题 · 10 分 批改进度 0/3 开始批改 张 张三 简答题 第 2 题 · 简答题 · 10 分 批改进度 0/3 开始批改 王 王五 简答题 第 3 题 
+- 成绩复核页：http://127.0.0.1:3000/teacher/appeals
+- 成绩复核摘要：智考平台 教师端 主菜单 工作台 课程教学 资源题库 试卷管理 考务中心 阅卷评分 待阅任务 成绩复核 批改历史 数据分析 王老师 教师 成绩复核 处理学生提交的成绩复核申请 全部状态 0 待处理 1 已通过 0 已驳回 张 张明 已通过 400 · 课程15联调考试A 2026-06-06 18:01:21 申请原因 ?????????????????????? ✓ 已通过
+- 教师端日志摘要：
+  - api:200 http://127.0.0.1:3000/src/api/auth.ts
+  - api:200 http://127.0.0.1:3000/src/api/student.ts?t=1780746436197
+  - api:200 http://127.0.0.1:3000/src/api/request.ts
+  - console:debug: [vite] connecting...
+  - console:verbose: [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://www.chromium.org/developers/design-documents/create-amazing-password-forms) %o
+  - console:debug: [vite] connected.
+  - api:200 http://127.0.0.1:3000/api/v1/auth/login
+  - api:200 http://127.0.0.1:3000/src/api/teacher.ts?t=1780750183191
+  - api:200 http://127.0.0.1:3000/api/v1/teacher/courses?pageSize=100
+  - api:200 http://127.0.0.1:3000/api/v1/teacher/questions?pageSize=1
+  - api:200 http://127.0.0.1:3000/api/v1/teacher/grading/tasks?status=pending&pageSize=1
+  - api:200 http://127.0.0.1:3000/api/v1/teacher/exams?status=ongoing&pageSize=10
+  - console:debug: [vite] connecting...
+  - console:debug: [vite] connected.
+  - api:304 http://127.0.0.1:3000/src/api/student.ts?t=1780746436197
+  - api:304 http://127.0.0.1:3000/src/api/auth.ts
+  - api:304 http://127.0.0.1:3000/src/api/request.ts
+  - api:304 http://127.0.0.1:3000/src/api/teacher.ts?t=1780750183191
+  - api:200 http://127.0.0.1:3000/api/v1/teacher/courses?pageSize=100
+  - console:debug: [vite] connecting...
+
+## 学生端 walkthrough
+- 登录后地址：http://127.0.0.1:3000/home
+- 学生首页摘要：智考平台 主菜单 学习中心 我的课程 错题本 成绩报告 张明 stu_001 待考 0 场考试 已考 5 场均分65 错题 0 道待复习 进度 0% 使用课程码加入新课程 加入课程 我加入的课程 查看全部 Web前端开发技术 王老师 · 419AB2AE 学习进度 0% Java程序设计 王老师 · JAVA2024001 学习进度 0% Python数据分析 王老师 · PYTH2024001 学习进度 0% ddd 王老师 · 8FE21D07 学习进度 0% 待参加考试 0 场 暂无待参加的考
+- 学生课程详情页：http://127.0.0.1:3000/courses/15
+- 学生课程摘要：智考平台 主菜单 学习中心 我的课程 错题本 成绩报告 张明 stu_001 我的课程 ddd ddd 8FE21D07 · 王老师 3 学分 64 学时 1111 已完成考试 2 均分 0 待参加考试 0 最近一场 - 错题数 0 涉及 0 个知识点 学习进度 0% 知识点掌握度 考试列表 全部 待参加 已完成 考试名称 时间 时长/题数/总分 操作 111 已完成 06-05 00:00 - 02:00 120分钟 · 25题 · 100分 考试回顾 错题重刷 课程15联调考试A 已完成 06-06
+- 成绩报告页：http://127.0.0.1:3000/report/99
+- 成绩报告摘要：智考平台 主菜单 学习中心 我的课程 错题本 成绩报告 张明 stu_001 成绩报告 选择课程 Web前端开发技术（419AB2AE） Java程序设计（JAVA2024001） Python数据分析（PYTH2024001） ddd（8FE21D07） 考试 Java程序设计-期中考试 (06-05) Java程序设计-第二次单元测验 (04-15) Java程序设计-第一次单元测验 (03-10) Java程序设计 加课码: JAVA2024001 Java程序设计-期中考试 2026-06-05T21:14:00 我的得分 76 满分 100 班级均分 74 共 12 人 最高分 95 参考值 排名 #6 百分位 58.3 正确率 16.7% 1/6 知识点掌握度
+- 错题本页：http://127.0.0.1:3000/wrong-questions
+- 错题本摘要：智考平台 主菜单 学习中心 我的课程 错题本 成绩报告 张明 stu_001 错题本 共 1 道错题 0高频错题 1涉及课程 1涉及考试 来源类型： 全部 考试错题 自建题库 课程： 全部课程 知识点： 全部知识点 我的自建题库 新建题库 点击创建你的第一个题库 错题列表 考试错题 课程15联调考试A 课程15联调样题：2 + 2 = ? 单选题 我的答案：(未答) 正确答案： 上次错误：7 hours ago 重练 已收藏
+- 学生端日志摘要：
+  - api:200 http://127.0.0.1:3000/src/api/student.ts?t=1780746436197
+  - api:200 http://127.0.0.1:3000/src/api/auth.ts
+  - api:200 http://127.0.0.1:3000/src/api/request.ts
+  - console:debug: [vite] connecting...
+  - console:verbose: [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://www.chromium.org/developers/design-documents/create-amazing-password-forms) %o
+  - console:debug: [vite] connected.
+  - api:200 http://127.0.0.1:3000/api/v1/auth/login
+  - api:200 http://127.0.0.1:3000/api/v1/notifications
+  - api:200 http://127.0.0.1:3000/api/v1/student/courses
+  - api:200 http://127.0.0.1:3000/api/v1/student/exams/pending
+  - api:200 http://127.0.0.1:3000/api/v1/student/wrongQuestions?pageSize=1
+  - api:200 http://127.0.0.1:3000/api/v1/student/grades?pageSize=100
+  - api:200 http://127.0.0.1:3000/api/v1/student/exams/history
+  - console:debug: [vite] connecting...
+  - console:debug: [vite] connected.
+  - api:304 http://127.0.0.1:3000/src/api/student.ts?t=1780746436197
+  - api:304 http://127.0.0.1:3000/src/api/auth.ts
+  - api:304 http://127.0.0.1:3000/src/api/request.ts
+  - api:200 http://127.0.0.1:3000/api/v1/student/wrongQuestions/report?courseId=15
+  - api:200 http://127.0.0.1:3000/api/v1/student/courses/15
